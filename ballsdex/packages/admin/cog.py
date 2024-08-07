@@ -77,25 +77,17 @@ class Admin(commands.GroupCog):
     async def on_guild_join(self, guild: discord.Guild):
         log.info(f"Joined new guild: {guild.name} (ID: {guild.id})")
 
-        # Create an embed message
+        # if you want to show member count in the servers it joins, 
+        # you'll need to enable the members intent enabled in the bot's settings
+        # This is not recommended for large bots, as it can cause performance issues.
         embed = discord.Embed(
             title="Joined a New Guild!",
             description=f"`{'Guild Name':<12}`: {guild.name}\n`{'Guild ID':<12}`: {guild.id}",
             color=discord.Color.green()
         )
         embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
-
-        # Use cached members.
-        # Note: This requires the `members` intent to be enabled.
-        members = guild.members
-        total_members = len(members)
-        total_bots = sum(1 for member in members if member.bot)
-        # Update the embed message with the total members and bots
-        embed.add_field(name="Total Members", value=str(total_members), inline=True)
-        embed.add_field(name="Total Bots", value=str(total_bots), inline=True)
-
         # Send the embed message to the specified channel
-        channel_id = 1270697686898704496
+        channel_id = 1270697686898704496 # CHANGE THIS TO YOUR CHANNEL ID.
         channel = self.bot.get_channel(channel_id)
         if channel:
             await channel.send(embed=embed)
@@ -114,7 +106,7 @@ class Admin(commands.GroupCog):
         )
 
         # Send the embed message to the specified channel
-        channel_id = 1270697686898704496
+        channel_id = 1270697686898704496 # CHANGE THIS TO YOUR CHANNEL ID.
         channel = self.bot.get_channel(channel_id)
         if channel:
             await channel.send(embed=embed)
