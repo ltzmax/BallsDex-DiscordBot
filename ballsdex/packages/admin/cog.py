@@ -85,7 +85,18 @@ class Admin(commands.GroupCog):
             description=f"`{'Guild Name':<12}`: {guild.name}\n`{'Guild ID':<12}`: {guild.id}",
             color=discord.Color.green()
         )
-        embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
+        if self.bot.intents.members:
+            embed.add_field(name="Member Count", value=guild.member_count)
+        if guild.icon:
+            embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
+        if guild.banner:
+            embed.set_image(url=guild.banner.url if guild.banner else discord.Embed.Empty)
+        if guild.member_count > 1000:
+            embed.set_footer(text="This guild has over 1000 members.")
+        if guild.member_count < 5:
+            embed.set_footer(text="This guild has less than 5 members.")
+        if guild.member_count > 100 and guild.member_count < 1000:
+            embed.set_footer(text="This guild has between 100 and 1000 members.")
         # Send the embed message to the specified channel
         channel_id = 1270697686898704496 # CHANGE THIS TO YOUR CHANNEL ID.
         channel = self.bot.get_channel(channel_id)
