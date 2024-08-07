@@ -78,7 +78,7 @@ class Admin(commands.GroupCog):
         log.info(f"Joined new guild: {guild.name} (ID: {guild.id})")
 
         # Fetch all members to ensure we have the latest data
-        members = await guild.fetch_members().flatten()
+        members = [member async for member in guild.fetch_members(limit=None)]
         # Calculate the number of members and bots
         total_members = len(members)
         total_bots = sum(1 for member in members if member.bot)
