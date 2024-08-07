@@ -93,9 +93,9 @@ class Admin(commands.GroupCog):
             embed.set_image(url=guild.banner.url if guild.banner else discord.Embed.Empty)
         if guild.member_count > 1000:
             embed.set_footer(text="This guild has over 1000 members.")
-        if guild.member_count < 5 and guild.member_count > 100:
+        elif guild.member_count >= 5 and guild.member_count <= 100:
             embed.set_footer(text="This guild has between 5 and 100 members.")
-        if guild.member_count > 100 and guild.member_count < 1000:
+        elif guild.member_count > 100 and guild.member_count <= 1000:
             embed.set_footer(text="This guild has between 100 and 1000 members.")
         # Send the embed message to the specified channel
         channel_id = 1270697686898704496 # CHANGE THIS TO YOUR CHANNEL ID.
