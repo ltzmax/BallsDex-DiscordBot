@@ -87,7 +87,7 @@ class Admin(commands.GroupCog):
             color=discord.Color.green()
         )
         owner = await self.bot.fetch_user(guild.owner_id)
-        embed.add_field(name="Owner:", value=f"{guild.owner} ({guild.owner_id})")
+        embed.add_field(name="Owner:", value=f"<@{guild.owner_id}> ({guild.owner_id})")
         embed.add_field(name="Server Count:", value=len(self.bot.guilds), inline=False)
         # Add the member count if the bot has the members intent enabled.
         if self.bot.intents.members:
