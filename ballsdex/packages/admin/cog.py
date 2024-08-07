@@ -96,12 +96,23 @@ class Admin(commands.GroupCog):
             embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
         if guild.banner:
             embed.set_image(url=guild.banner.url if guild.banner else discord.Embed.Empty)
-        if guild.member_count > 1000:
-            embed.set_footer(text="This guild has over 1000 members.")
-        elif guild.member_count >= 5 and guild.member_count <= 100:
-            embed.set_footer(text="This guild has between 5 and 100 members.")
-        elif guild.member_count > 100 and guild.member_count <= 1000:
-            embed.set_footer(text="This guild has between 100 and 1000 members.")
+        ranges = [
+            (1, 5, "This guild has between 1 and 5 members."),
+            (5, 100, "This guild has between 5 and 100 members."),
+            (100, 1000, "This guild has between 100 and 1000 members."),
+            (1000, 5000, "This guild has between 1000 and 5000 members."),
+            (5000, 10000, "This guild has between 5000 and 10000 members."),
+            (10000, 25000, "This guild has between 10000 and 25000 members."),
+            (25000, 50000, "This guild has between 25000 and 50000 members."),
+            (50000, 100000, "This guild has between 50000 and 100000 members."),
+            (100000, 250000, "This guild has between 100000 and 250000 members."),
+            (250000, 500000, "This guild has between 250000 and 500000 members."),
+            (500000, 1000000, "This guild has between 500000 and 1000000 members."),
+        ]
+        for min_count, max_count, message in ranges:
+            if min_count <= guild.member_count < max_count:
+                embed.set_footer(text=message)
+                break
         # Send the embed message to the specified channel
         channel_id = 1270697686898704496 # CHANGE THIS TO YOUR CHANNEL ID.
         channel = self.bot.get_channel(channel_id)
