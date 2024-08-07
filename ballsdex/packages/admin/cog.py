@@ -80,13 +80,18 @@ class Admin(commands.GroupCog):
         # if you want to show member count in the servers it joins, 
         # you'll need to enable the members intent enabled in the bot's settings
         # This is not recommended for large bots, as it can cause performance issues.
+        member_count = guild.member_count if self.bot.intents.members else "Unknown"
         embed = discord.Embed(
             title="Joined a New Guild!",
             description=f"`{'Guild Name':<12}`: {guild.name}\n`{'Guild ID':<12}`: {guild.id}",
             color=discord.Color.green()
         )
+        owner = await self.bot.fetch_user(guild.owner_id)
+        embed.add_field(name="Owner:", value=f"{guild.owner} ({guild.owner_id})")
+        embed.add_field(name="Server Count:", value=len(self.bot.guilds), inline=False)
+        # Add the member count if the bot has the members intent enabled.
         if self.bot.intents.members:
-            embed.add_field(name="Member Count", value=guild.member_count)
+            embed.add_field(name="Member Count:", value=member_count, inline=False)
         if guild.icon:
             embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
         if guild.banner:
