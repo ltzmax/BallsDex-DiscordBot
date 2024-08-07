@@ -77,9 +77,11 @@ class Admin(commands.GroupCog):
     async def on_guild_join(self, guild: discord.Guild):
         log.info(f"Joined new guild: {guild.name} (ID: {guild.id})")
 
+        # Fetch all members to ensure we have the latest data
+        members = await guild.fetch_members().flatten()
         # Calculate the number of members and bots
-        total_members = guild.member_count
-        total_bots = sum(1 for member in guild.members if member.bot)
+        total_members = len(members)
+        total_bots = sum(1 for member in members if member.bot)
 
         # Create an embed message
         embed = discord.Embed(
