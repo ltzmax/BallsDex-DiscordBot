@@ -78,10 +78,10 @@ class Admin(commands.GroupCog):
         log.info(f"Joined new guild: {guild.name} (ID: {guild.id})")
 
         # Fetch all members to ensure we have the latest data
-        members = [member async for member in guild.fetch_members(limit=None)]
+        #members = [member async for member in guild.fetch_members(limit=None)]
         # Calculate the number of members and bots
-        total_members = len(members)
-        total_bots = sum(1 for member in members if member.bot)
+        #total_members = len(members)
+        #total_bots = sum(1 for member in members if member.bot)
 
         # Create an embed message
         embed = discord.Embed(
@@ -89,8 +89,8 @@ class Admin(commands.GroupCog):
             description=f"Guild Name: {guild.name}\nGuild ID: {guild.id}",
             color=discord.Color.green()
         )
-        embed.add_field(name="Total Members", value=str(total_members), inline=True)
-        embed.add_field(name="Total Bots", value=str(total_bots), inline=True)
+        #embed.add_field(name="Total Members", value=str(total_members), inline=True)
+        #embed.add_field(name="Total Bots", value=str(total_bots), inline=True)
         embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
 
         # Send the embed message to the specified channel
