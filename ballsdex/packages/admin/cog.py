@@ -73,6 +73,53 @@ class Admin(commands.GroupCog):
         self.blacklist.parent = self.__cog_app_commands_group__
         self.balls.parent = self.__cog_app_commands_group__
 
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild: discord.Guild):
+        log.info(f"Joined new guild: {guild.name} (ID: {guild.id})")
+
+        # Calculate the number of members and bots
+        total_members = guild.member_count
+        total_bots = sum(1 for member in guild.members if member.bot)
+
+        # Create an embed message
+        embed = discord.Embed(
+            title="Joined a New Guild!",
+            description=f"Guild Name: {guild.name}\nGuild ID: {guild.id}",
+            color=discord.Color.green()
+        )
+        embed.add_field(name="Total Members", value=str(total_members), inline=True)
+        embed.add_field(name="Total Bots", value=str(total_bots), inline=True)
+        embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
+
+        # Send the embed message to the specified channel
+        channel_id = 1270697686898704496
+        channel = self.bot.get_channel(channel_id)
+        if channel:
+            await channel.send(embed=embed)
+        else:
+            log.warning(f"Channel with ID {channel_id} not found.")
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild: discord.Guild):
+        log.info(f"Left guild: {guild.name} (ID: {guild.id})")
+
+        # Create an embed message
+        embed = discord.Embed(
+            title="Left a Guild",
+            description=f"Guild Name: {guild.name}\nGuild ID: {guild.id}",
+            color=discord.Color.red()
+        )
+        embed.add_field(name="Total Members", value=str(guild.member_count), inline=True)
+        embed.set_thumbnail(url=guild.icon.url if guild.icon else discord.Embed.Empty)
+
+        # Send the embed message to the specified channel
+        channel_id = 1270697686898704496
+        channel = self.bot.get_channel(channel_id)
+        if channel:
+            await channel.send(embed=embed)
+        else:
+            log.warning(f"Channel with ID {channel_id} not found.")
+
     blacklist = app_commands.Group(name="blacklist", description="Bot blacklist management")
     blacklist_guild = app_commands.Group(
         name="blacklistguild", description="Guild blacklist management"
