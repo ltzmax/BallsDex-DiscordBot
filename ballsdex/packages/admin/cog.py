@@ -82,13 +82,13 @@ class Admin(commands.GroupCog):
         # This is not recommended for large bots, as it can cause performance issues.
         member_count = guild.member_count if self.bot.intents.members else "Unknown"
         embed = discord.Embed(
-            title="Joined a New Guild!",
+            title=f"{settings.bot_name} Joined a New Guild!",
             description=f"`{'Guild Name':<12}`: {guild.name}\n`{'Guild ID':<12}`: {guild.id}",
             color=discord.Color.green()
         )
         owner = await self.bot.fetch_user(guild.owner_id)
         embed.add_field(name="Owner:", value=f"<@{guild.owner_id}> ({guild.owner_id})")
-        embed.add_field(name="Server Count:", value=len(self.bot.guilds), inline=False)
+        embed.add_field(name=f"{settings.bot_name} Server Count:", value=len(self.bot.guilds), inline=False)
         # Add the member count if the bot has the members intent enabled.
         if self.bot.intents.members:
             embed.add_field(name="Member Count:", value=member_count, inline=False)
@@ -127,11 +127,12 @@ class Admin(commands.GroupCog):
 
         # Create an embed message
         embed = discord.Embed(
-            title="Left a Guild",
+            title=f"{settings.bot_name} Left a Guild",
             description=f"`{'Guild Name':<12}`: {guild.name}\n`{'Guild ID':<12}`: {guild.id}",
             color=discord.Color.red(),
         )
-
+        embed.add_field(name=f"{settings.bot_name} Server Count:", value=len(self.bot.guilds), inline=False)
+        embed.set_footer(text="This guild has been left.")
         # Send the embed message to the specified channel
         channel_id = 1270697686898704496 # CHANGE THIS TO YOUR CHANNEL ID.
         channel = self.bot.get_channel(channel_id)
