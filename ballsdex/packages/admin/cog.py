@@ -98,7 +98,7 @@ class Admin(commands.GroupCog):
             embed.set_image(url=guild.banner.url if guild.banner else discord.Embed.Empty)
         ranges = [
             (1, 5, "This guild has between 1 and 5 members."),
-            (1, 5, "This guild has between 5 and 10 members."),
+            (5, 10, "This guild has between 5 and 10 members."),
             (5, 100, "This guild has between 10 and 100 members."),
             (100, 1000, "This guild has between 100 and 1000 members."),
             (1000, 5000, "This guild has between 1000 and 5000 members."),
