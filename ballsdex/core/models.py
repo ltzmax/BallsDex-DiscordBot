@@ -36,6 +36,19 @@ async def lower_catch_names(
         ).lower()
 
 
+async def lower_translations(
+    model: Type[Ball],
+    instance: Ball,
+    created: bool,
+    using_db: "BaseDBAsyncClient | None" = None,
+    update_fields: Iterable[str] | None = None,
+):
+    if instance.translations:
+        instance.translations = ";".join(
+            [x.strip() for x in instance.translations.split(";")]
+        ).lower()
+
+
 class DiscordSnowflakeValidator(validators.Validator):
     def __call__(self, value: int):
         if not 17 <= len(str(value)) <= 19:
@@ -121,6 +134,11 @@ class Ball(models.Model):
         default=None,
         description="Additional possible names for catching this ball, separated by semicolons",
     )
+    translations = fields.TextField(
+        null=True,
+        default=None,
+        description="Translations for the country name, separated by semicolons",
+    )
     regime: fields.ForeignKeyRelation[Regime] = fields.ForeignKeyField(
         "models.Regime", description="Political regime of this country", on_delete=fields.CASCADE
     )
@@ -169,6 +187,7 @@ class Ball(models.Model):
 
 
 Ball.register_listener(signals.Signals.pre_save, lower_catch_names)
+Ball.register_listener(signals.Signals.pre_save, lower_translations)
 
 
 class BallInstance(models.Model):
@@ -375,6 +394,11 @@ class PrivacyPolicy(IntEnum):
     SAME_SERVER = 3
 
 
+class MentionPolicy(IntEnum):
+    ALLOW = 1
+    DENY = 2
+
+
 class Player(models.Model):
     discord_id = fields.BigIntField(
         description="Discord user ID", unique=True, validators=[DiscordSnowflakeValidator()]
@@ -389,10 +413,19 @@ class Player(models.Model):
         description="How you want to handle privacy",
         default=PrivacyPolicy.DENY,
     )
+    mention_policy = fields.IntEnumField(
+        MentionPolicy,
+        description="How you want to handle mentions",
+        default=MentionPolicy.ALLOW,
+    )
     balls: fields.BackwardFKRelation[BallInstance]
 
     def __str__(self) -> str:
         return str(self.discord_id)
+
+    @property
+    def can_be_mentioned(self) -> bool:
+        return self.mention_policy == MentionPolicy.ALLOW
 
 
 class BlacklistedID(models.Model):
