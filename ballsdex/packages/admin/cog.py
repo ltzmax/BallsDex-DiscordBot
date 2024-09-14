@@ -101,8 +101,10 @@ class Admin(commands.GroupCog):
         ranges = [
             (1, 5, "This guild has between 1 and 5 members."),
             (5, 10, "This guild has between 5 and 10 members."),
-            (10, 100, "This guild has between 10 and 100 members."),
-            (100, 1000, "This guild has between 100 and 1000 members."),
+            (10, 50, "This guild has between 10 and 100 members."),
+            (50, 100, "This guild has between 50 and 100 members."),
+            (100, 500, "This guild has between 100 and 1000 members."),
+            (500, 1000, "This guild has between 500 and 1000 members."),
             (1000, 5000, "This guild has between 1000 and 5000 members."),
             (5000, 10000, "This guild has between 5000 and 10000 members."),
             (10000, 25000, "This guild has between 10000 and 25000 members."),
