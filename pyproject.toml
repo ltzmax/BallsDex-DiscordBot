@@ -12,7 +12,7 @@ python = "^3.12"
 uvloop = { version = "^0.19.0", markers = "sys_platform != 'win32'" }
 
 # discord
-"discord.py" = "^2.4.0"
+"discord.py" = {git = "https://github.com/Rapptz/discord.py", rev = "59f877fcf013c4ddeeb2b39fc21f03e76f995461"}
 
 # fastapi
 fastapi = "^0.111.0"
