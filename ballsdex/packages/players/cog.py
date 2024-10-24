@@ -258,13 +258,17 @@ class Player(commands.GroupCog):
             return
 
         await interaction.response.defer(thinking=True)
-        view = ConfirmChoiceView(interaction, user=user)
+        view = ConfirmChoiceView(
+            interaction,
+            user=user,
+            accept_message="Friend request accepted!",
+            cancel_message="Friend request declined.",
+        )
         await interaction.followup.send(
             f"{user.mention}, {interaction.user} has sent you a friend request!",
             view=view,
             allowed_mentions=discord.AllowedMentions(users=player2.can_be_mentioned),
         )
-
         self.active_friend_requests[(player1.discord_id, player2.discord_id)] = True
         await view.wait()
 
@@ -320,6 +324,7 @@ class Player(commands.GroupCog):
         friendships = (
             await Friendship.filter(Q(player1=player) | Q(player2=player))
             .select_related("player1", "player2")
+            .order_by("since")
             .all()
         )
 
@@ -379,7 +384,11 @@ class Player(commands.GroupCog):
 
         friended = await player1.is_friend(player2)
         if friended:
-            view = ConfirmChoiceView(interaction)
+            view = ConfirmChoiceView(
+                interaction,
+                accept_message="User has been blocked.",
+                cancel_message=f"Request cancelled, {user.name} is still your friend.",
+            )
             await interaction.followup.send(
                 "This user is your friend, are you sure you want to block them?",
                 view=view,
@@ -437,7 +446,10 @@ class Player(commands.GroupCog):
         player, _ = await PlayerModel.get_or_create(discord_id=interaction.user.id)
 
         blocked_relations = (
-            await Block.filter(player1=player).select_related("player1", "player2").all()
+            await Block.filter(player1=player)
+            .select_related("player1", "player2")
+            .order_by("date")
+            .all()
         )
 
         if not blocked_relations:

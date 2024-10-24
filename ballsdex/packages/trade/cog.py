@@ -121,6 +121,12 @@ class Trade(commands.GroupCog):
         blocked = await player1.is_blocked(player2)
         if blocked:
             await interaction.response.send_message(
+                "You cannot begin a trade with a user that you have blocked.", ephemeral=True
+            )
+            return
+        blocked2 = await player2.is_blocked(player1)
+        if blocked2:
+            await interaction.response.send_message(
                 "You cannot begin a trade with a user that has blocked you.", ephemeral=True
             )
             return
@@ -182,7 +188,11 @@ class Trade(commands.GroupCog):
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
         if countryball.favorite:
-            view = ConfirmChoiceView(interaction)
+            view = ConfirmChoiceView(
+                interaction,
+                accept_message=f"{settings.collectible_name.title()} added.",
+                cancel_message="This request has been cancelled.",
+            )
             await interaction.followup.send(
                 f"This {settings.collectible_name} is a favorite, "
                 "are you sure you want to trade it?",
